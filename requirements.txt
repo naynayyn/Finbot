@@ -1,1 +1,9 @@
-
+groq
+edge-tts
+streamlit
+python-dotenv
+plotly
+langdetect
+sounddevice
+soundfile
+numpy
