@@ -12,14 +12,14 @@ from finance.database import (
     get_budget_status, set_budget
 )
 
-init_db()
-
 st.set_page_config(
     page_title="FinBot — AI Financial Advisor",
     page_icon="💰",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+init_db()
 
 st.markdown("""
 <style>
