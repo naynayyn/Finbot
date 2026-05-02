@@ -7,3 +7,7 @@ langdetect
 sounddevice
 soundfile
 numpy
+streamlit-webrtc
+av
+soundfile
+audio-recorder-streamlit

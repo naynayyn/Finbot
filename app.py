@@ -270,29 +270,26 @@ for msg in st.session_state.messages:
         st.write(msg["content"])
 
 # ── Voice ──────────────────────────────────────────────────
+from audio_recorder_streamlit import audio_recorder
+
 col_voice, col_space = st.columns([1, 5])
 with col_voice:
-    if st.button("🎤 Record (3s)"):
-        try:
-            import sounddevice as sd
-            import soundfile as sf
-            with st.spinner("🎤 Recording... speak now!"):
-                recording = sd.rec(
-                    int(3 * 16000),
-                    samplerate=16000,
-                    channels=1,
-                    dtype="float32"
-                )
-                sd.wait()
+    audio_bytes = audio_recorder(
+        text="🎤 Click to record",
+        recording_color="#7c3aed",
+        neutral_color="#6b7280",
+        pause_threshold=2.0,
+    )
+    if audio_bytes and audio_bytes != st.session_state.get("last_audio"):
+        st.session_state["last_audio"] = audio_bytes
+        with st.spinner("🎤 Transcribing..."):
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-                sf.write(f.name, recording, 16000)
+                f.write(audio_bytes)
                 result = transcribe_audio(f.name)
                 os.unlink(f.name)
-            st.session_state["voice_input"] = result["text"]
-            st.success(f"🎤 You said: *{result['text']}*")
-            st.rerun()
-        except Exception as e:
-            st.error(f"Microphone error: {e}")
+        st.session_state["voice_input"] = result["text"]
+        st.success(f"🎤 You said: *{result['text']}*")
+        st.rerun()
 
 # ── Input ──────────────────────────────────────────────────
 user_input = (
